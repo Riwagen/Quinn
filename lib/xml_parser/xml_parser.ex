@@ -51,14 +51,14 @@ defmodule Quinn.XmlParser do
     parse_record(head, options) ++ parse_record(tail, options)
   end
 
-  defp parse_attribute([]), do: []
+  defp parse_attribute([]), do: %{}
 
   defp parse_attribute({:xmlAttribute, name, _, _, _, _, _, _, value, _}) do
-    [{name, to_string(value)}]
+    %{name => to_string(value)}
   end
 
   defp parse_attribute([head | tail]) do
-    parse_attribute(head) ++ parse_attribute(tail)
+    Map.merge(parse_attribute(head), parse_attribute(tail))
   end
 
   defp parse_name(name, %{strip_namespaces: true}) do
